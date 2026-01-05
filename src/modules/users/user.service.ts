@@ -6,7 +6,6 @@ const getSingleUser = async (id: string) => {
     return result;
 };
 
-// Implement update and delete if needed
 const updateUser = async (id: string, payload: Partial<IUser>) => {
     const result = await User.findByIdAndUpdate(id, payload, { new: true });
     return result;

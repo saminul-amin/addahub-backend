@@ -10,8 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 const createCheckoutSession = async (eventId: string, userId: string) => {
     const event = await Event.findById(eventId);
     if (!event) throw new Error("Event not found");
-    
-    // Validate event status
+
     if (event.status === 'full' || event.status === 'cancelled' || event.status === 'completed') {
         throw new Error(`Event is ${event.status}`);
     }
@@ -30,7 +29,7 @@ const createCheckoutSession = async (eventId: string, userId: string) => {
                         description: `Ticket for ${event.title}`,
                         images: event.image ? [event.image] : [],
                     },
-                    unit_amount: Math.round(event.price * 100), // Stripe expects cents
+                    unit_amount: Math.round(event.price * 100),
                 },
                 quantity: 1,
             },
@@ -42,7 +41,7 @@ const createCheckoutSession = async (eventId: string, userId: string) => {
             eventId,
             userId
         },
-        customer_email: undefined // Can populate if we fetch user
+        customer_email: undefined
     });
 
     return session;

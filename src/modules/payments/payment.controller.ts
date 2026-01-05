@@ -24,16 +24,10 @@ const verifyPayment = async (req: Request, res: Response) => {
     try {
         const { sessionId, eventId, userId } = req.body;
         
-        // 1. Verify with Stripe
         const session = await PaymentService.verifyPayment(sessionId);
         
         if (session.payment_status === 'paid') {
-            // 2. Add User to Event
-            // We use the service method which handles duplicates, full capacity etc.
-            // Note: In production, webhook is better for reliability. 
-            // Here we trust the sessionId verification.
             try {
-                // Check if already joined to avoid error
                 const event = await EventService.getEventById(eventId);
                 const isJoined = event?.participants.some((p: any) => p._id.toString() === userId || p.toString() === userId);
                 
@@ -41,7 +35,6 @@ const verifyPayment = async (req: Request, res: Response) => {
                     await EventService.joinEvent(eventId, userId);
                 }
             } catch (joinError) {
-                // Ignore if already joined or handle specific errors
                 console.log("Join skipped or failed:", joinError);
             }
 

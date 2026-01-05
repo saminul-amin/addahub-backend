@@ -9,7 +9,6 @@ const uploadImage = (req: Request, res: Response) => {
     });
   }
 
-  // Use upload_stream to upload the buffer from memory
   const stream = cloudinary.uploader.upload_stream(
     { folder: 'events' },
     (error, result) => {
@@ -32,7 +31,6 @@ const uploadImage = (req: Request, res: Response) => {
     }
   );
 
-  // Pipe the buffer to the stream
   stream.end(req.file.buffer);
 };
 

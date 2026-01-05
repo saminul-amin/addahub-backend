@@ -3,8 +3,8 @@ import { IUser } from '../users/user.interface';
 
 export interface IReview {
     reviewer: Types.ObjectId | IUser;
-    event: Types.ObjectId | any; // Changed from host to event
-    rating: number; // 1-5
+    event: Types.ObjectId | any;
+    rating: number; 
     comment?: string;
     createdAt: Date;
 }

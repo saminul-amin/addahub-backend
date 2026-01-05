@@ -4,12 +4,10 @@ import cookieParser from 'cookie-parser';
 
 const app: Application = express();
 
-// Parsers
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: 'https://addahub-frontend.vercel.app', credentials: true }));
 
-// Application Routes
 import { AuthRoutes } from './modules/auth/auth.route';
 import { UserRoutes } from './modules/users/user.route';
 
@@ -28,7 +26,6 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Events & Activities App Backend Running!');
 });
 
-// Global Error Handler
 app.use((err: any, req: Request, res: Response, next: any) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Something went wrong!';

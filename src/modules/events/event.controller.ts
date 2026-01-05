@@ -59,7 +59,7 @@ const getEventById = async (req: Request, res: Response) => {
 const joinEvent = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { userId } = req.body; // In real app, get from req.user
+        const { userId } = req.body;
         const result = await EventService.joinEvent(id, userId);
         res.status(200).json({
             success: true,

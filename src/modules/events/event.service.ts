@@ -8,8 +8,7 @@ const createEvent = async (payload: IEvent): Promise<IEvent> => {
 };
 
 const getAllEvents = async (query: Record<string, unknown>) => {
-    // Basic Filtering and Searching
-    const { searchTerm, ...filterData } = query;
+    const { searchTerm, limit, ...filterData } = query;
     const andConditions = [];
 
     if (searchTerm) {
@@ -30,12 +29,17 @@ const getAllEvents = async (query: Record<string, unknown>) => {
 
     const whereConditions = andConditions.length > 0 ? { $and: andConditions } : {};
     
-    // Sort by date descending by default
     const sortConditions: { [key: string]: SortOrder } = { date: 1 };
 
-    const result = await Event.find(whereConditions)
+    const queryBuilder = Event.find(whereConditions)
         .populate('organizer', 'name email')
         .sort(sortConditions);
+
+    if (limit) {
+        queryBuilder.limit(Number(limit));
+    }
+
+    const result = await queryBuilder;
         
     return result;
 };
@@ -56,7 +60,6 @@ const joinEvent = async (eventId: string, userId: string) => {
         throw new Error('Event is not available for joining');
     }
 
-    // Check if already joined using some/includes logic based on type
     const isAlreadyJoined = event.participants.some(p => p.toString() === userId);
     if (isAlreadyJoined) {
         throw new Error('You have already joined this event');
@@ -88,16 +91,12 @@ const leaveEvent = async (eventId: string, userId: string) => {
         throw new Error('Event not found');
     }
 
-    // Check if user is a participant
     const isParticipant = event.participants.some(p => p.toString() === userId);
     if (!isParticipant) {
         throw new Error('You are not a participant of this event');
     }
-
-    // Remove user from participants
     event.participants = event.participants.filter(p => p.toString() !== userId);
     
-    // Update status if event was full
     if (event.status === 'full' && event.participants.length < event.maxParticipants) {
         event.status = 'open';
     }

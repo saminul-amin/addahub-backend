@@ -3,10 +3,8 @@ import { Review } from './review.model';
 
 const createReview = async (req: Request, res: Response) => {
     try {
-        const { event, rating, comment, reviewer } = req.body; // Expect event ID
+        const { event, rating, comment, reviewer } = req.body;
         
-        // Simple validation can be added here if needed to check if event exists
-
         const result = await Review.create({
             event,
             rating,
@@ -14,8 +12,6 @@ const createReview = async (req: Request, res: Response) => {
             reviewer
         });
         
-        // Populate reviewer immediately for the frontend response if needed, 
-        // though we will also handle CSR optimistic update.
         await result.populate('reviewer', 'name profileImage');
 
         res.status(200).json({
@@ -40,7 +36,7 @@ const getEventReviews = async (req: Request, res: Response) => {
                 path: 'reviewer',
                 select: 'name profileImage' 
             })
-            .sort({ createdAt: -1 }); // Newest first
+            .sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,

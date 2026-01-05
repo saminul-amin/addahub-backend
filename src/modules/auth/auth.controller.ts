@@ -24,7 +24,7 @@ const loginUser = async (req: Request, res: Response) => {
         const { refreshToken, accessToken, ...others } = result;
 
         res.cookie('refreshToken', refreshToken, {
-            secure: false, // Set to true in production
+            secure: false,
             httpOnly: true
         });
 
