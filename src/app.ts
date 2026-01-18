@@ -6,7 +6,7 @@ const app: Application = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'https://addahub-frontend.vercel.app', credentials: true }));
+app.use(cors({ origin: ['https://addahub-frontend.vercel.app', 'http://localhost:3000'], credentials: true }));
 
 import { AuthRoutes } from './modules/auth/auth.route';
 import { UserRoutes } from './modules/users/user.route';
@@ -18,7 +18,7 @@ app.use('/api/v1/events', EventRoutes);
 import { ReviewRoutes } from './modules/reviews/review.route';
 app.use('/api/v1/reviews', ReviewRoutes);
 import { UploadRoutes } from './modules/upload/upload.route';
-app.use('/api/upload', UploadRoutes);
+app.use('/api/v1/upload', UploadRoutes);
 import { PaymentRoutes } from './modules/payments/payment.route';
 app.use('/api/v1/payments', PaymentRoutes);
 
